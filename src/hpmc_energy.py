@@ -7,6 +7,9 @@ import hoomd
 import hoomd.conftest
 from hoomd.hpmc_energy import _hpmc_energy
 
+import inspect
+from hoomd.data.typeconverter import OnlyIf, to_type_converter
+
 
 class ExampleExternal(hoomd.hpmc.external.External):
     """An example external potential for HPMC.
@@ -59,3 +62,41 @@ class ExamplePair(hoomd.hpmc.pair.Pair):
             ),
         )
         self._add_typeparam(params)
+
+
+@hoomd.logging.modify_namespace(('hpmc', 'pair', 'HarmonicAnglePair'))
+class HarmonicAnglePair(hoomd.hpmc.pair.Pair):
+    r"""An example pair potential for HPMC.
+
+    Args:
+        default_r_cut (float): Default cutoff radius :math:`[\mathrm{length}]`.
+
+    TODO: document the class.
+
+    """
+
+    _cpp_class_name = 'HarmonicAnglePairPotential'
+    __doc__ = inspect.cleandoc(__doc__).replace(
+        "{inherited}", inspect.cleandoc(hoomd.hpmc.pair.Pair._doc_inherited)
+    )
+    _ext_module = _hpmc_energy
+
+    def __init__(self, default_theta = 0, default_k = 1, default_r_cut = None):
+        if default_r_cut is None:
+            default_r_cut = float
+        else:
+            default_r_cut = float(default_r_cut)
+
+        params = hoomd.data.typeparam.TypeParameter(
+            "params",
+            "particle_types",
+            hoomd.data.parameterdicts.TypeParameterDict(
+                theta=float,
+                k=float,
+                r_cut=default_r_cut,
+                len_keys=2,
+            ),
+        )
+        self._add_typeparam(params)
+
+

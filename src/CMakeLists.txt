@@ -5,9 +5,11 @@ set(COMPONENT_NAME hpmc_energy)
 set(_${COMPONENT_NAME}_sources
     ExampleExternalPotential.cc
     ExamplePairPotential.cc
+    HarmonicAnglePairPotential.cc
     module.cc
     ExampleExternalPotential.h
     ExamplePairPotential.h
+    HarmonicAnglePairPotential.h
     )
 
 # TODO: List all GPU C++ source code files in _${COMPONENT_NAME}_cu_sources.
