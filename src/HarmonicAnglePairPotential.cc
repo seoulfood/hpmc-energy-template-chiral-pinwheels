@@ -25,10 +25,24 @@ LongReal HarmonicAnglePairPotential::energy(const LongReal r_squared,
     unsigned int param_index = m_type_param_index(type_i, type_j);
     const auto& param = m_params[param_index];
 
-    Scalar theta = 0;
-    Scalar theta_theta_star_squared = fast::pow(theta-param.m_theta_star, 2);
-    Scalar invr_rsq = 1 / r_squared;
-    LongReal energy = - 0.5 * invr_rsq * param.m_k * (theta_theta_star_squared);
+    vec3<LongReal> v1_i = rotate(q_i, vec3<LongReal>(1, 0, 0));
+    vec3<LongReal> v2_i = rotate(q_i, vec3<LongReal>(0, 1, 0));
+
+    vec3<LongReal> v1_j = rotate(q_j, vec3<LongReal>(1, 0, 0));
+    vec3<LongReal> v2_j = rotate(q_j, vec3<LongReal>(0, 1, 0));
+
+    Scalar theta_1_ij = acos(dot(v1_i, v1_j));
+    Scalar r_ij_mag = dot(r_ij, r_ij);
+
+    vec3<LongReal> proj_rij_v2_i = v2_i - ((dot(v2_i, r_ij)/r_ij_mag)*r_ij);
+    vec3<LongReal> proj_rij_v2_j = v2_j - ((dot(v2_j, r_ij)/r_ij_mag)*r_ij);
+
+    Scalar theta_2_ij = acos(dot(proj_rij_v2_i, proj_rij_v2_j));
+
+    Scalar theta_theta_star_squared = fast::pow(theta_2_ij-param.m_theta_star, 2);
+
+    //Scalar invr_rsq = 1 / r_squared;
+    LongReal energy = - 0.5 * param.m_k * (theta_theta_star_squared);
     return energy;
 
     }
