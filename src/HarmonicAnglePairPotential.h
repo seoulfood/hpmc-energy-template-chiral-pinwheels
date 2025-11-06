@@ -55,6 +55,7 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
         ParamType() 
         { 
             m_theta_star = 0;
+            m_equiv_theta = 0;
             m_k = 0;
             m_r_squared = 0;
         }
@@ -62,11 +63,16 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
         /// Construct a parameter set from a dictionary.
         ParamType(pybind11::dict params)
         {
-            m_theta_star = params["theta"].cast<LongReal>();
-            m_k = params["k"].cast<LongReal>();
+            auto theta_star(params["theta"].cast<LongReal>());
+            auto k(params["k"].cast<LongReal>());
+            auto equiv_theta(params["equivalent_theta"].cast<LongReal>());
             auto r_cut(params["r_cut"].cast<LongReal>());
-
+            
+            m_theta_star = theta_star;
+            m_equiv_theta = equiv_theta;
+            m_k = k;
             m_r_squared = r_cut * r_cut;
+
 
         }
 
@@ -76,6 +82,7 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
 
             result["theta"] = m_theta_star;
             result["k"] = m_k;
+            result["equivalent_theta"] = m_equiv_theta;
             result["r_cut"] = slow::sqrt(m_r_squared);
 
             return result;
@@ -83,6 +90,7 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
 
         // TODO: rename or add parameters as needed
         LongReal m_theta_star;
+        LongReal m_equiv_theta;
         LongReal m_k;
         LongReal m_r_squared;
         };
