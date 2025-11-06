@@ -55,9 +55,10 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
         ParamType() 
         { 
             m_theta_star = 0;
-            m_equiv_theta = 0;
+            m_equiv_theta = 2*M_PI;
             m_k = 0;
             m_r_squared = 0;
+            m_maximum_theta_m_theta_star = 1;
         }
 
         /// Construct a parameter set from a dictionary.
@@ -72,7 +73,11 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
             m_equiv_theta = equiv_theta;
             m_k = k;
             m_r_squared = r_cut * r_cut;
+            
+            Scalar inBetweenAlignment = fast::pow(m_theta_star, 2);
+            Scalar theRestOfIt = fast::pow((m_equiv_theta/2) - m_theta_star, 2);
 
+            m_maximum_theta_m_theta_star = fmax(inBetweenAlignment, theRestOfIt);
 
         }
 
@@ -93,6 +98,8 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
         LongReal m_equiv_theta;
         LongReal m_k;
         LongReal m_r_squared;
+
+        LongReal m_maximum_theta_m_theta_star;
         };
 
     /// Parameters per type pair.
