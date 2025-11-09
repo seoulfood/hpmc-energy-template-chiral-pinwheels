@@ -32,6 +32,17 @@ LongReal HarmonicAnglePairPotential::energy(const LongReal r_squared,
     vec3<LongReal> v2_j = rotate(q_j, vec3<LongReal>(0, 1, 0));
 
     Scalar theta_1_ij = acos(dot(v1_i, v1_j));
+    if(theta_1_ij != theta_1_ij){
+        if(dot(v1_i, v1_j) > 1){
+            theta_1_ij = 0.0;
+        }
+        else{
+            theta_1_ij = M_PI;
+        }
+    }
+
+    //Scalar theta_1_ij_norm = fast::sqrt(1 - fast::pow(dot(v1_i, v1_j), 2)); //this has an issue with output ranges. Could figure out floating point issues to make things quicker but I'm lazy.
+    Scalar theta_1_ij_norm = sin(theta_1_ij);
     Scalar r_ij_mag = fast::sqrt(dot(r_ij, r_ij));
 
     vec3<LongReal> proj_rij_v2_i = v2_i - ((dot(v2_i, r_ij)/r_ij_mag)*r_ij);
@@ -54,8 +65,14 @@ LongReal HarmonicAnglePairPotential::energy(const LongReal r_squared,
     Scalar theta_theta_star_squared = fast::pow(theta_2_ij-param.m_theta_star, 2);
 
     //Scalar invr_rsq = 1 / r_squared;
-    LongReal energy = (0.5 * param.m_k * ((theta_theta_star_squared/param.m_maximum_theta_m_theta_star) - 1)); 
-    return energy;
+    LongReal energy_parallel = (0.5 * param.m_k * ((theta_theta_star_squared/param.m_maximum_theta_m_theta_star) - 1)); 
+    LongReal skew_prefactor = (1 - fast::pow(2*theta_1_ij_norm/M_PI, 2)); 
+    //LongReal energy_total = energy_parallel + energy_skew;
+    LongReal energy_total = skew_prefactor*energy_parallel;
+
+    //return skew_prefactor;
+    return energy_total;
+    //return energy_parallel;
     }
 
 void HarmonicAnglePairPotential::setParamsPython(pybind11::tuple particle_types, pybind11::dict params)
