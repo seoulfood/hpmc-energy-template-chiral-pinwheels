@@ -59,6 +59,7 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
             m_k = 0;
             m_r_squared = 0;
             m_maximum_theta_m_theta_star = 1;
+            m_upshift = 0;
         }
 
         /// Construct a parameter set from a dictionary.
@@ -68,11 +69,13 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
             auto k(params["k"].cast<LongReal>());
             auto equiv_theta(params["equivalent_theta"].cast<LongReal>());
             auto r_cut(params["r_cut"].cast<LongReal>());
+            auto upshift(params["upshift"].cast<LongReal>());
             
             m_theta_star = theta_star;
             m_equiv_theta = equiv_theta;
             m_k = k;
             m_r_squared = r_cut * r_cut;
+            m_upshift = upshift;
             
             Scalar inBetweenAlignment = fast::pow(m_theta_star, 2);
             Scalar theRestOfIt = fast::pow((m_equiv_theta/2) - m_theta_star, 2);
@@ -89,6 +92,7 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
             result["k"] = m_k;
             result["equivalent_theta"] = m_equiv_theta;
             result["r_cut"] = slow::sqrt(m_r_squared);
+            result["upshift"] = m_upshift;
 
             return result;
             }
@@ -98,6 +102,7 @@ class HarmonicAnglePairPotential : public hpmc::PairPotential
         LongReal m_equiv_theta;
         LongReal m_k;
         LongReal m_r_squared;
+        LongReal m_upshift;
 
         LongReal m_maximum_theta_m_theta_star;
         };

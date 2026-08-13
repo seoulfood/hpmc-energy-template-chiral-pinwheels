@@ -81,7 +81,7 @@ class HarmonicAnglePair(hoomd.hpmc.pair.Pair):
     )
     _ext_module = _hpmc_energy
 
-    def __init__(self, default_theta = None, default_equivalent_theta=None, default_k = None, default_r_cut = None):
+    def __init__(self, default_theta = None, default_equivalent_theta=None, default_k = None, default_r_cut = None, default_upshift=None):
         if default_r_cut is None:
             default_r_cut = float
         else:
@@ -102,6 +102,11 @@ class HarmonicAnglePair(hoomd.hpmc.pair.Pair):
         else:
             default_k = float(default_k)
 
+        if default_upshift is None:
+            default_upshift = float
+        else:
+            default_upshift = float(default_upshift)
+
         params = hoomd.data.typeparam.TypeParameter(
             "params",
             "particle_types",
@@ -109,6 +114,7 @@ class HarmonicAnglePair(hoomd.hpmc.pair.Pair):
                 theta=default_theta,
                 equivalent_theta = default_equivalent_theta,
                 k=default_k,
+                upshift=default_upshift,
                 r_cut=default_r_cut,
                 len_keys=2,
             ),

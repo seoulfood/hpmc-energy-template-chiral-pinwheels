@@ -64,15 +64,14 @@ LongReal HarmonicAnglePairPotential::energy(const LongReal r_squared,
 
     Scalar theta_theta_star_squared = fast::pow(theta_2_ij-param.m_theta_star, 2);
 
-    //Scalar invr_rsq = 1 / r_squared;
     LongReal energy_parallel = (0.5 * param.m_k * ((theta_theta_star_squared/param.m_maximum_theta_m_theta_star) - 1)); 
     LongReal skew_prefactor = (1 - fast::pow(2*theta_1_ij_norm/M_PI, 2)); 
-    //LongReal energy_total = energy_parallel + energy_skew;
-    LongReal energy_total = skew_prefactor*energy_parallel;
+    LongReal r_prefactor = 1/(1+r_squared);
+    LongReal energy_total = r_prefactor*skew_prefactor*energy_parallel;
 
-    //return skew_prefactor;
+    energy_total += param.m_upshift;
+
     return energy_total;
-    //return energy_parallel;
     }
 
 void HarmonicAnglePairPotential::setParamsPython(pybind11::tuple particle_types, pybind11::dict params)
