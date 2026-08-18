@@ -5,6 +5,7 @@
 // TODO: Include the header files of classes that will be exported to Python.
 #include "ExampleExternalPotential.h"
 #include "ExamplePairPotential.h"
+#include "MiePairPotential.h"
 #include "HarmonicAnglePairPotential.h"
 
 using namespace hoomd::hpmc::detail;
@@ -15,6 +16,7 @@ PYBIND11_MODULE(_hpmc_energy, m)
     {
     // TODO: Call export_Class(m) for each C++ class to be exported to Python.
     export_ExamplePairPotential(m);
+    export_MiePairPotential(m);
     export_HarmonicAnglePairPotential(m);
     export_ExampleExternalPotential(m);
 

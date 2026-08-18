@@ -122,3 +122,62 @@ class HarmonicAnglePair(hoomd.hpmc.pair.Pair):
         self._add_typeparam(params)
 
 
+@hoomd.logging.modify_namespace(('hpmc', 'pair', 'MiePairPotential'))
+class MiePairPotential(hoomd.hpmc.pair.Pair):
+    r"""An example pair potential for HPMC.
+
+    Args:
+        default_r_cut (float): Default cutoff radius :math:`[\mathrm{length}]`.
+
+    TODO: document the class.
+
+    """
+
+    _cpp_class_name = 'MiePairPotential'
+    __doc__ = inspect.cleandoc(__doc__).replace(
+        "{inherited}", inspect.cleandoc(hoomd.hpmc.pair.Pair._doc_inherited)
+    )
+    _ext_module = _hpmc_energy
+
+    def __init__(self, default_epsilon = None, default_sigma=None, default_n = None, default_m = None, default_r_cut = None):
+        if default_r_cut is None:
+            default_r_cut = float
+        else:
+            default_r_cut = float(default_r_cut)
+
+        if default_epsilon is None:
+            default_epsilon = float
+        else:
+            default_epsilon = float(default_epsilon)
+
+        if default_sigma is None:
+            default_sigma = float
+        else:
+            default_sigma = float(default_sigma)
+
+        if default_m is None:
+            default_m = float
+        else:
+            default_m = float(default_m)
+
+        if default_n is None:
+            default_n = float
+        else:
+            default_n = float(default_n)
+
+
+        params = hoomd.data.typeparam.TypeParameter(
+            "params",
+            "particle_types",
+            hoomd.data.parameterdicts.TypeParameterDict(
+                epsilon=default_epsilon,
+                sigma=default_sigma,
+                m=default_m,
+                n=default_n,
+                r_cut=default_r_cut,
+                len_keys=2,
+            ),
+        )
+        self._add_typeparam(params)
+
+

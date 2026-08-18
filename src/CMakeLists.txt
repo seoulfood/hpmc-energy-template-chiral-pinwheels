@@ -5,10 +5,12 @@ set(COMPONENT_NAME hpmc_energy)
 set(_${COMPONENT_NAME}_sources
     ExampleExternalPotential.cc
     ExamplePairPotential.cc
+    MiePairPotential.cc
     HarmonicAnglePairPotential.cc
     module.cc
     ExampleExternalPotential.h
     ExamplePairPotential.h
+    MiePairPotential.h
     HarmonicAnglePairPotential.h
     )
 
